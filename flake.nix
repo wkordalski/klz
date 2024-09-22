@@ -15,7 +15,7 @@
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
             nodejs
-            nodePackages.yarn
+            yarn-berry
             swc
           ];
         };
