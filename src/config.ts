@@ -1,0 +1,1 @@
+export const BASE_DATA_URL = 'https://raw.githubusercontent.com/wkordalski/klz-data/master/';
