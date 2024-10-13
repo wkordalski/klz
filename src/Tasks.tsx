@@ -1,22 +1,22 @@
 import useSWR from "swr";
-import { BASE_DATA_URL } from "./config";
 import { parse } from 'csv-parse/browser/esm/sync';
 
-const fetcher = (url: string) => 
+const fetcher = (url: URL) => 
     fetch(url)
     .then(res => res.text())
-    .then(text => parse(text, {columns: true}).map(parseTaskData));
+    .then(text => parse(text, {columns: true}).map((o: any) => parseTaskData(o, url)));
 
 export interface Task {
+    id: number,
     name: string,
-    file: string,
-    start: string,
-    end: string,
+    file: URL,
+    start: Date,
+    end: Date,
     points: {[key: string]: number},
 }
 
-export function useTasks(editionDirectory: string) {
-    const { data, isLoading, error } = useSWR(BASE_DATA_URL + editionDirectory + '/data.csv', fetcher);
+export function useTasks(edition_url?: URL) {
+    const { data, isLoading, error } = useSWR(edition_url ?? null, fetcher);
 
     return {
         data: data as Task[],
@@ -25,12 +25,13 @@ export function useTasks(editionDirectory: string) {
     };
 }
 
-function parseTaskData(object: any): Task {
+function parseTaskData(object: any, edition_url: URL): Task {
     return {
-        name: object['Name'],
-        file: object['File'],
-        start: object['Start'],
-        end: object['End'],
+        id: object['id'],
+        name: object['name'],
+        file: new URL(object['url'], edition_url),
+        start: new Date(object['start']),
+        end: new Date(object['end']),
         points: {},
     };
 }

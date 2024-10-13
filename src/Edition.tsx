@@ -3,19 +3,21 @@ import { BASE_DATA_URL } from "./config";
 import { parse } from 'csv-parse/browser/esm/sync';
 import { useRef } from "react";
 
+const EDITIONS_URL = BASE_DATA_URL + 'editions.csv';
+
 const fetcher = (url: string) => 
     fetch(url)
     .then(res => res.text())
-    .then(text => parse(text, {columns: false}).map(parseEditionData));
+    .then(text => parse(text, {columns: true}).map(parseEditionData));
 
 export interface Edition {
     name: string,
-    directory: string,
+    url: URL,
     active: boolean,
 }
 
 export function useEditions() {
-    const { data, isLoading, error } = useSWR(BASE_DATA_URL + 'editions.csv', fetcher);
+    const { data, isLoading, error } = useSWR(EDITIONS_URL, fetcher);
 
     return {
         data: data as Edition[],
@@ -24,11 +26,17 @@ export function useEditions() {
     };
 }
 
-function parseEditionData([name, directory, active]: string[]): Edition {
+interface EditionData {
+    name: string,
+    url: string,
+    is_active: string,
+}
+
+function parseEditionData({name, url, is_active}: EditionData): Edition {
     return {
         name,
-        directory,
-        active: active === 'active',
+        url: new URL(url, EDITIONS_URL),
+        active: is_active === 'active',
     };
 }
 
