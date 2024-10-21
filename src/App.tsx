@@ -41,7 +41,7 @@ function App() {
   }
   if (tasks.data !== undefined) {
     renderedTasks = <ul>
-      {tasks.data.map(task => <li key={task.id}><a href={task.file.toString()}>{task.name}</a></li>)}
+      {tasks.data.map(task => <li key={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
     </ul>;
   }
 
