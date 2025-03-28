@@ -8,6 +8,7 @@ function App() {
   const editions = useEditions();
   const [edition, setEdition] = useState<Edition | null>(null);
   const tasks = useTasks(edition?.url);
+  const [time, setTime] = useState<Date>(new Date());
 
   useEffect(() => {
     if (editions.data === undefined) {
@@ -18,6 +19,11 @@ function App() {
       setEdition(editions.data[0]);
     }
   }, [editions.data, edition, setEdition]);
+
+  useEffect(() => {
+    const interval = setInterval(() => setTime(new Date()), 60*1000);
+    return () => clearInterval(interval);
+  }, []);
 
   let renderedEditions = <p>Hmmm...</p>;
   if (editions.isLoading) {
@@ -40,9 +46,18 @@ function App() {
     renderedTasks = <p>Error</p>;
   }
   if (tasks.data !== undefined) {
-    renderedTasks = <ul>
-      {tasks.data.map(task => <li key={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
-    </ul>;
+    const activeTasks = <ol>
+      {tasks.data.filter(task => task.start <= time && time <= task.end).map(task => <li key={task.id} value={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
+    </ol>;
+    const oldTasks = <ol>
+      {tasks.data.filter(task => task.end <= time).map(task => <li key={task.id} value={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
+    </ol>;
+    renderedTasks = <>
+      <h1>Aktywne zadania</h1>
+      {activeTasks}
+      <h1>Zadania po terminie</h1>
+      {oldTasks}
+    </>;
   }
 
   return (
