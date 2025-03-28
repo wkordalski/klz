@@ -46,11 +46,12 @@ function App() {
     renderedTasks = <p>Error</p>;
   }
   if (tasks.data !== undefined) {
+    const taskList = [...tasks.data].sort((a, b) => b.id - a.id).sort((a, b) => b.end.getTime() - a.end.getTime());
     const activeTasks = <ol>
-      {tasks.data.filter(task => task.start <= time && time <= task.end).map(task => <li key={task.id} value={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
+      {taskList.filter(task => task.start <= time && time <= task.end).map(task => <li key={task.id} value={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
     </ol>;
     const oldTasks = <ol>
-      {tasks.data.filter(task => task.end <= time).map(task => <li key={task.id} value={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
+      {taskList.filter(task => task.end <= time).map(task => <li key={task.id} value={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
     </ol>;
     renderedTasks = <>
       <h1>Aktywne zadania</h1>
