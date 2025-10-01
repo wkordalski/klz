@@ -13,9 +13,10 @@ export function EditionChooser({ editions, edition, setEdition }: { editions: Ed
                     {editions.map(edition => <EditionChooserItem key={edition.name} edition={edition} onClick={() => {setEdition(edition); dialogRef.current?.close(); }} />)}
                 </div>
             </dialog>
-            <span onClick={() => {
-                dialogRef.current?.showModal();
-            }}>{edition.name}</span>
+            <span
+              onClick={() => {dialogRef.current?.showModal();}}
+              style={{cursor: 'pointer'}}
+            >{edition.name}</span>
         </>
     }
 }
