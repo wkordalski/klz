@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { Edition, EditionChooser, useEditions } from './Edition';
-import { useTasks } from './Tasks';
-
+import { EditionChooser } from './EditionChooser';
+import { Edition, useEditions } from './edition';
+import { useTasks, Task } from './Tasks';
 
 function App() {
   const editions = useEditions();
@@ -46,31 +46,35 @@ function App() {
     renderedTasks = <p>Error</p>;
   }
   if (tasks.data !== undefined) {
-    const taskList = [...tasks.data].sort((a, b) => b.id - a.id).sort((a, b) => b.end.getTime() - a.end.getTime());
-    const activeTasks = <ol>
-      {taskList.filter(task => task.start <= time && time <= task.end).map(task => <li key={task.id} value={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
-    </ol>;
-    const oldTasks = <ol>
-      {taskList.filter(task => task.end <= time).map(task => <li key={task.id} value={task.id}><a href={task.file.toString()}>{task.name}</a> ({task.end.toLocaleDateString('pl-PL')})</li>)}
-    </ol>;
-    renderedTasks = <>
-      <h1>Aktywne zadania</h1>
-      {activeTasks}
-      <h1>Zadania po terminie</h1>
-      {oldTasks}
-    </>;
+    const taskList = [...tasks.data].reverse().map(task => <TaskDetails key={task.id} task={task} time={time} />);
+    renderedTasks = <table style={{width: '100%'}}><tbody>{taskList}</tbody></table>;
   }
 
   return (
     <>
-      <div>
-        <h1 style={{float: 'left'}}>Kuźniowa Liga Zadaniowa</h1>
-        <div style={{float: 'right', margin: '12px'}}>{renderedEditions}</div>
+      <div className="page">
+        <div>
+          <h1 style={{float: 'left'}}>Kuźniowa Liga Zadaniowa</h1>
+          <div style={{float: 'right', margin: '12px'}}>{renderedEditions}</div>
+        </div>
+        <hr style={{clear: 'both'}}/>
+        {renderedTasks}
+        <hr />
+        <div className="copyright">Copyright © 2025 Wojciech Kordalski</div>
       </div>
-      <hr style={{clear: 'both'}}/>
-      {renderedTasks}
     </>
   )
+}
+
+
+function TaskDetails({task, time}: {task: Task, time: Date}) {
+  const isActive = time <= task.end;
+  return <tr className={`task-details ${isActive ? 'active' : 'inactive'}`}>
+    <td className="task-details-id">{task.id}.</td>
+    <td className="task-details-name"><a href={task.file.toString()}>{task.name}</a></td>
+    <td className="task-details-date">{task.end.toLocaleDateString('pl-PL')}</td>
+    <td className="task-details-points"></td>
+  </tr>;
 }
 
 export default App;

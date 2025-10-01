@@ -1,3 +1,89 @@
 h1 {
-  font-size: 14pt;
+  font-size: 12pt;
+}
+
+body {
+  background-color: #cccccc;
+  padding: 0;
+  margin: 0;
+}
+
+.page {
+  background-color: white;
+  padding: 16px;
+  font-size: 11pt;
+}
+
+.task-details td {
+  vertical-align: top;
+}
+
+.task-details .task-details-id {
+  color: darkgreen;
+  text-align: right;
+  pointer-events: none;
+  user-select: none;
+  font-size: 10pt;
+  padding-top: 2px;
+}
+
+
+.task-details.active .task-details-date {
+  color: #cc0000;
+}
+
+.task-details .task-details-name {
+  color: black;
+}
+
+.task-details .task-details-name a {
+  color: black;
+  text-decoration: none;
+}
+
+.task-details .task-details-name a:hover {
+  color: #004000;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+.task-details .task-details-date {
+  color: #101010;
+  text-align: right;
+  cursor: default;
+}
+
+.task-details .task-details-points {
+  color: black;
+  text-align: center;
+}
+
+.task-details.inactive {
+  filter: contrast(0.4);
+}
+
+.copyright {
+  text-align: center;
+  font-size: 8pt;
+  font-family: serif;
+  color: #606060;
+}
+
+@media only screen and (min-width: 800px) {
+  .page {
+    width: 740px;
+    border: 1px solid #000000;
+    margin: 16px auto;
+    box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.5);
+    font-size: 12pt;
+  }
+
+  h1 {
+    font-size: 14pt;
+  }
+
+  .task-details .task-details-id {
+    font-size: 11pt;
+    padding-top: 2px;
+  }
 }
